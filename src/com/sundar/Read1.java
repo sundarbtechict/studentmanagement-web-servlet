@@ -2,10 +2,6 @@ package com.sundar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,15 +30,10 @@ public class Read1 extends HttpServlet {
 		String regno = request.getParameter("regno");
 		System.out.println(regno);
 		try{
-			Connection c= DbUtil.getConnection();
-			boolean f= false;
-			String sql="SELECT * FROM STUDENT_MANAGEMENT WHERE regno=?";
-			PreparedStatement ps=c.prepareStatement(sql);
-			ps.setString(1,regno);
-			ResultSet rs=ps.executeQuery();
-			PrintWriter out = response.getWriter();		
-			while(rs.next())
-			{
+		Student st=DbUtil.read(regno);
+		PrintWriter out = response.getWriter();
+		if(st.isF())
+		{
 				out.println("<!DOCTYPE html>" + 
 						"<html lang='en'>" + 
 						"<head>" + 
@@ -54,50 +45,45 @@ public class Read1 extends HttpServlet {
 						"<script type='text/javascript' src='./plugins/jquery.2.2.3.min.js'></script>" + 
 						"</head>" + 
 						"<body>" + 
-						"<div class='jumbotron text-center' style='color:#000080;'><h2>Student Management</h2></div>" + 
+						"<div class='jumbotron text-center' style='color:#000080;'><h2>Student Management</h2></div>"
+						+ "<div class='container'>" + 
 						"<table class='table table-striped'" 
 						+ "<tr>"
 						+ "<th>Register no:</th>"
-						+ "<td>"+rs.getString("regno")+"</td>"
+						+ "<td>"+st.getRegNo()+"</td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Name:</th>"
-						+ "<td>"+rs.getString("name")+"</td>"
+						+ "<td>"+st.getName()+"</td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Date of Birth:</th>"
-						+ "<td>"+rs.getString("dob")+"</td>"
+						+ "<td>"+st.getDob()+"</td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Department:</th>"
-						+ "<td>"+rs.getString("dept")+"</td>"
+						+ "<td>"+st.getDept()+"</td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Email:</th>"
-						+ "<td>"+rs.getString("email")+"</td>"
+						+ "<td>"+st.getEmail()+"</td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Mobile:</th>"
-						+ "<td>"+rs.getString("mobile")+"</td>"
+						+ "<td>"+st.getMobile()+"</td>"
 						+ "</tr>"
 						+ "</table>"
-						+ "<a href='./././index'>back</a>"
+						+ "<a href='./././index'> Back</a>"
 						+ "</div>" + 
 						"</body>"  
 						+"</html>");	
-					f=true;
-			}
-			if(!f)
-			{
-				out.println("<html> <p>Invalid register no</p><br>"
-						+ "<a href='./index'>back</a></html>");
-			}
-			rs.close();
-			ps.close();
-			c.close();
+		}
+		else
+		{
+			out.println("<html> <p>Invalid register no</p><br>"
+				+ "<a href='./index'>back</a></html>");
+		}
 		}catch (Exception e){System.out.println(e);}
-	
-
 	}
 
 	/**

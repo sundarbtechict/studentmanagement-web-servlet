@@ -2,10 +2,6 @@ package com.sundar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,14 +29,9 @@ public class Edit extends HttpServlet {
 		String regno = request.getParameter("regno");
 		System.out.println(regno);
 		try{
-			Connection c= DbUtil.getConnection();
-			boolean f= false;
-			String sql="SELECT * FROM STUDENT_MANAGEMENT WHERE regno=?";
-			PreparedStatement ps=c.prepareStatement(sql);
-			ps.setString(1,regno);
-			ResultSet rs=ps.executeQuery();
-			PrintWriter out = response.getWriter();		
-			while(rs.next())
+			Student st=DbUtil.read(regno);
+			PrintWriter out = response.getWriter();
+			if(st.isF())
 			{
 				out.println("<!DOCTYPE html>"
 						+"<html lang='en'>" + 
@@ -59,45 +50,40 @@ public class Edit extends HttpServlet {
 						+"<form class=\"form-inline\" action='./edit1' method='POST'>"
 						+ "<tr>"
 						+ "<th>Register no:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='regno' value='"+rs.getString("regno")+"' readonly></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='regno' value='"+st.getRegNo()+"' readonly></td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Name:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='name' value='"+rs.getString("name")+"'></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='name' value='"+st.getName()+"'></td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Date of Birth:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='dob' value='"+rs.getString("dob")+"'></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='dob' value='"+st.getDob()+"'></td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Department:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='dept' value='"+rs.getString("dept")+"'></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='dept' value='"+st.getDept()+"'></td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Email:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='email' value='"+rs.getString("email")+"'></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='email' value='"+st.getEmail()+"'></td>"
 						+ "</tr>"
 						+ "<tr>"
 						+ "<th>Mobile:</th>"
-						+ "<td><input type='text' class=\"form-inline\" name='mobile' value='"+rs.getString("mobile")+"'></td>"
+						+ "<td><input type='text' class=\"form-inline\" name='mobile' value='"+st.getMobile()+"'></td>"
 						+ "</tr>"
 						+"<tr><td></td><td><input type=\"submit\" class=\"btn btn-info\" value=\"Update\"></td></tr>"
 						+ "</table>"
 						+ "<a href='./index'>back</a></div>" + 
 						"			</body>" + 
 						"			</html>");	
-					f=true;
 			}
-			if(!f)
+			else
 			{
 				out.println("<html> <p>Invalid register no</p><br>"
-						+ "<a href='./index'>back</a></html>");
+					+ "<a href='./index'>back</a></html>");
 			}
-			rs.close();
-			ps.close();
-			c.close();
-		}catch (Exception e){System.out.println(e);}
-	
+			}catch (Exception e){System.out.println(e);}
 
 	}
 

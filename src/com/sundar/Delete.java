@@ -1,9 +1,6 @@
 package com.sundar;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,17 +28,9 @@ public class Delete extends HttpServlet {
 		String regno = request.getParameter("regno");
 		System.out.println(regno);
 		try{
-			Connection c= DbUtil.getConnection();
-			String sql="DELETE FROM STUDENT_MANAGEMENT WHERE regno=?";
-			PreparedStatement ps=c.prepareStatement(sql);
-			ps.setString(1,regno);
-			ps.executeUpdate();
-			ps.close();
-			c.close();
-			response.sendRedirect("./././index");
-
+		DbUtil.delete(regno);
 		}catch (Exception e){System.out.println(e);}
-
+		response.sendRedirect("./././index");
 
 	}
 

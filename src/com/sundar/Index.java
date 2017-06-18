@@ -2,10 +2,8 @@ package com.sundar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +28,6 @@ public class Index extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		try{
-			Connection c= DbUtil.getConnection();
-			boolean f= false;
-			String sql="SELECT * FROM STUDENT_MANAGEMENT";
-			PreparedStatement ps=c.prepareStatement(sql);
-			ResultSet rs=ps.executeQuery();
 			PrintWriter out = response.getWriter();	
 			out.println("<!DOCTYPE html>"  
 					+"<html lang='en'>"
@@ -63,26 +55,23 @@ public class Index extends HttpServlet {
 					+"<th>ACTION</th>"
 					+ "</tr>"
 					);
-			
-			while(rs.next())
+			try{
+			List<Student> li=DbUtil.select();
+			Iterator<Student> itr=li.iterator();  
+			while(itr.hasNext())  
 			{
+				Student st=itr.next();
 						out.println("<tr>"
-						+ "<td>"+rs.getString("regno")+"</td>"
-						+ "<td>"+rs.getString("name")+"</td>"
-						+ "<td>"+rs.getString("dob")+"</td>"
-						+ "<td>"+rs.getString("dept")+"</td>"
-						+ "<td>"+rs.getString("email")+"</td>"
-						+ "<td>"+rs.getString("mobile")+"</td>"
-						+"<td><a href='./read?regno="+rs.getString("regno")+"'>View</a></td>"
-						+"<td><a href='./edit?regno="+rs.getString("regno")+"'>Edit</a></td>"
-						+"<td><a href='./delete?regno="+rs.getString("regno")+"'>Delete</a></td>"
+						+ "<td>"+st.getRegNo()+"</td>"
+						+ "<td>"+st.getName()+"</td>"
+						+ "<td>"+st.getDob()+"</td>"
+						+ "<td>"+st.getDept()+"</td>"
+						+ "<td>"+st.getEmail()+"</td>"
+						+ "<td>"+st.getMobile()+"</td>"
+						+"<td><a href='./read?regno="+st.getRegNo()+"'>View</a></td>"
+						+"<td><a href='./edit?regno="+st.getRegNo()+"'>Edit</a></td>"
+						+"<td><a href='./delete?regno="+st.getRegNo()+"'>Delete</a></td>"
 						+ "</tr>");
-							
-					f=true;
-			}
-			if(!f)
-			{
-				out.println("<p>Empty list</p><br>");
 			}
 			out.println("</table>"
 			+ "<a href='./././insert.html'>create</a>"
@@ -90,10 +79,8 @@ public class Index extends HttpServlet {
 			+ "</body>"
 			+ "</html>");
 			
-			rs.close();
-			ps.close();
-			c.close();
-		}catch (Exception e){System.out.println(e);}
+			
+			}catch (Exception e){System.out.println(e);}
 	}
 
 	/**
