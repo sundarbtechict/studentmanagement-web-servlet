@@ -28,7 +28,7 @@ public class Delete extends HttpServlet {
 		String regno = request.getParameter("regno");
 		System.out.println(regno);
 		try{
-		DbUtil.delete(regno);
+			StudentDB.delete(regno);
 		}catch (Exception e){System.out.println(e);}
 		response.sendRedirect("./././index");
 

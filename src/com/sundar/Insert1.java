@@ -41,7 +41,7 @@ public class Insert1 extends HttpServlet {
 		st.setMobile(request.getParameter("mobile"));
 		st.setDept(request.getParameter("dept"));
 		try{
-		DbUtil.insert(st);
+			StudentDB.insert(st);
 		}catch (Exception e){System.out.println(e);}
 		response.sendRedirect("./././index");
 	}

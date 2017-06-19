@@ -41,7 +41,7 @@ public class Edit1 extends HttpServlet {
 		st.setMobile(request.getParameter("mobile"));
 		st.setDept(request.getParameter("dept"));
 		try{
-		DbUtil.update(st);
+			StudentDB.update(st);
 		}catch (Exception e){System.out.println(e);}
 		response.sendRedirect("./././index");
 		doGet(request, response);

@@ -56,7 +56,7 @@ public class Index extends HttpServlet {
 					+ "</tr>"
 					);
 			try{
-			List<Student> li=DbUtil.select();
+			List<Student> li=StudentDB.select();
 			Iterator<Student> itr=li.iterator();  
 			while(itr.hasNext())  
 			{

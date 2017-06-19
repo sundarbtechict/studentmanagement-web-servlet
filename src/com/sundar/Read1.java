@@ -30,7 +30,7 @@ public class Read1 extends HttpServlet {
 		String regno = request.getParameter("regno");
 		System.out.println(regno);
 		try{
-		Student st=DbUtil.read(regno);
+		Student st=StudentDB.read(regno);
 		PrintWriter out = response.getWriter();
 		if(st.isF())
 		{
